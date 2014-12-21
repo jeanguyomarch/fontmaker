@@ -17,6 +17,15 @@ And it outputs:
 
 For more info, run `fontmaker --help`.
 
+Requirements
+------------
+
+Fontmaker relies on:
+- `cmake` as a build system;
+- `freetype2` to extract font properties and generate bitmaps from TTF files;
+- `flex` to parse the fontmaker charmap files;
+- `gperf` to generate perfect hash functions for bitmap decoding.
+
 
 Usage
 -----
