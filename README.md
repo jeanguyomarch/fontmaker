@@ -67,7 +67,7 @@ P
 É Ç é À ∑
 ```
 
-Have a look at the example in `examples/charmap.fm`.
+Have a look at the example in `tests/charmap.fm`.
 
 
 Build

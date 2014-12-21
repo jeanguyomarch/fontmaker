@@ -28,7 +28,7 @@ pkg_check_modules(FREETYPE REQUIRED freetype2)
 
 # Cmake tree
 add_subdirectory(bin)
-add_subdirectory(examples)
+add_subdirectory(tests)
 
 # Uninstall target
 add_custom_target(uninstall
