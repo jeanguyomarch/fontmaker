@@ -39,3 +39,6 @@ set_target_properties(fontmaker_parse PROPERTIES COMPILE_FLAGS
    -Wmissing-declarations
 )
 
+install(TARGETS fontmaker_parse RUNTIME DESTINATION bin)
+install(TARGETS fontmaker       RUNTIME DESTINATION bin)
+

@@ -26,8 +26,12 @@ endif ()
 find_package(PkgConfig)
 pkg_check_modules(FREETYPE REQUIRED freetype2)
 
-
 # Cmake tree
 add_subdirectory(bin)
 add_subdirectory(examples)
+
+# Uninstall target
+add_custom_target(uninstall
+   COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/uninstall.cmake
+)
 
