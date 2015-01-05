@@ -169,14 +169,14 @@ fm_output_generate_c(void)
    W("};");
    W("");
 
-   W("int");
+   W("%s int", opts->attribute);
    W("%ssize_get(void)", opts->prefix);
    W("{");
    W("   return %i;", opts->font_size);
    W("}");
    W("");
 
-   W("void");
+   W("%s void", opts->attribute);
    W("%sbounding_box_get(int *w, int *h)", opts->prefix);
    W("{");
    W("   if (w) *w = %i;", _width);
@@ -184,27 +184,26 @@ fm_output_generate_c(void)
    W("}");
    W("");
 
-   W("int");
+   W("%s int", opts->attribute);
    W("%sglyphs_available_get(void)", opts->prefix);
    W("{");
    W("   return %i;", fm_charmap_count_get());
    W("}");
    W("");
 
-   W("unsigned int");
+   W("%s unsigned int", opts->attribute);
    W("%scolor_bits_get(void)", opts->prefix);
    W("{");
    W("   return %i;", opts->font_bits);
    W("}");
    W("");
 
-   W("unsigned int");
+   W("%s unsigned char", opts->attribute);
    W("%sglyph_pixel_get(unsigned int codepoint,", opts->prefix);
    W("                  unsigned int x,");
    W("                  unsigned int y)");
    W("{");
-   W("   unsigned int pixel = (y * %i) + x;", _width);
-   W("   return _bitmap[pixel - 0x20][y][x];");
+   W("   return _bitmap[codepoint - 0x20][y][x];");
    W("}");
    W("");
 
@@ -232,23 +231,23 @@ fm_output_generate_h(void)
    W("#define __FONTMAKER__GENERATED_H__");
    W("");
 
-   W("int");
+   W("%s int", opts->attribute);
    W("%ssize_get(void);", opts->prefix);
    W("");
 
-   W("void");
+   W("%s void", opts->attribute);
    W("%sbounding_box_get(int *w, int *h);", opts->prefix);
    W("");
 
-   W("int");
+   W("%s int", opts->attribute);
    W("%sglyphs_available_get(void);", opts->prefix);
    W("");
 
-   W("unsigned int");
+   W("%s unsigned int", opts->attribute);
    W("%scolor_bits_get(void);", opts->prefix);
    W("");
 
-   W("unsigned int");
+   W("%s unsigned char", opts->attribute);
    W("%sglyph_pixel_get(unsigned int codepoint,", opts->prefix);
    W("                  unsigned int x,");
    W("                  unsigned int y);");

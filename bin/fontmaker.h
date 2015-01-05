@@ -23,6 +23,7 @@ struct _Fm_Opts
    char *h_file;
    char *map_file;
    char *prefix;
+   char *attribute;
 
    int   font_size;
    int   font_bits;

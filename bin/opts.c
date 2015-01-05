@@ -12,6 +12,7 @@ static struct option _options[] =
      {"map-file",   required_argument, 0, 'm'},
      {"bits",       required_argument, 0, 'b'},
      {"prefix",     required_argument, 0, 'p'},
+     {"attribute",  required_argument, 0, 'a'},
      {"font-size",  required_argument, 0, 's'},
      {"progmem",    no_argument,       0, 'P'},
      {"verbose",    no_argument,       0, 'v'},
@@ -38,6 +39,7 @@ _help(FILE *stream)
            "    --gh, -H          Output C code file path [DEFAULT: NONE]\n"
            "    --bits, -b        On how many bits is the output font coded? [DEFAULT: %i]\n"
            "    --prefix, -p      Prefix to prepend to the generated functions [DEFAULT: NONE]\n"
+           "    --attribute, -a   Add an attribute to the function [DEFAULT: NONE]\n"
            "\n",
            OPT_BITS_DEFAULT);
 }
@@ -59,7 +61,7 @@ fm_opts_init(int    argc,
 
    while (1)
      {
-        c = getopt_long(argc, argv, "f:C:H:m:b:p:s:vhr", _options, &opt_idx);
+        c = getopt_long(argc, argv, "f:C:H:m:a:b:p:s:vhr", _options, &opt_idx);
         if (c == -1) break;
 
         switch (c)
@@ -70,6 +72,10 @@ fm_opts_init(int    argc,
 
            case 'P':
               _opts.progmem = 1;
+              break;
+
+           case 'a':
+              _opts.attribute = strdup(optarg);
               break;
 
            case 'f':
@@ -157,6 +163,13 @@ fm_opts_init(int    argc,
           fprintf(stdout, "[--prefix] was [] defaults to [\"\"]\n");
         _opts.prefix = strdup("");
      }
+   if (_opts.attribute == NULL)
+     {
+        if (_opts.verbosity >= 2)
+          fprintf(stdout, "[--attribute] was [] defaults to [\"\"]\n");
+        _opts.attribute = strdup("");
+     }
+   // TODO Check memory is allocated
 
    return 0;
 }
@@ -169,6 +182,7 @@ fm_opts_shutdown(void)
    free(_opts.h_file);
    free(_opts.map_file);
    free(_opts.prefix);
+   free(_opts.attribute);
    memset(&_opts, 0, sizeof(Fm_Opts));
 }
 
