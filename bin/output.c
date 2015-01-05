@@ -6,7 +6,6 @@ static int   _bearing_y_up   = 0;
 static int   _bearing_y_down = 0;
 static FILE *_out            = NULL;
 
-#define W(f, ...) fprintf(_out, f "\n", ## __VA_ARGS__)
 #define FCLOSE() do { fclose(_out); _out = NULL; } while (0)
 
 static int
@@ -47,6 +46,7 @@ _gen_char(FT_ULong     code,
    int ex, ey, fx, gx, gy;
    int delta_x, delta_y;
    int width, height;
+   unsigned char cp;
 
    opts = fm_opts_get();
 
@@ -75,6 +75,8 @@ _gen_char(FT_ULong     code,
     *
     */
 
+#define W(f, ...) fprintf(_out, f, ## __VA_ARGS__)
+
    width = bm.width;
    height = bm.rows;
 
@@ -85,31 +87,33 @@ _gen_char(FT_ULong     code,
    fx = width + delta_x;
    gx = fx,              gy = delta_y + height;
 
-   if (opts->verbosity >= 1)
-     printf("Generate switch for [%lu] (%u)\n", code, idx);
+   if (opts->verbosity >= 2)
+     fprintf(stdout, "Generate switch for [%lu] (%u)\n", code, idx);
 
-   if (idx == fm_charmap_count_get())
-     W("       default:");
-   else
-     W("      case %u:", (unsigned int)code);
-   W("         switch (pixel)");
-   W("           {");
+   W("     {\n");
 
    i = 0;
-   for (y = ey; y < gy; y++)
+   for (y = 0; y < _height; y++)
      {
-        for (x = ex; x < gx; x++)
+        W("          { ");
+        for (x = 0; x < _width; x++)
           {
-             W("             case %i: return 0x%x;",
-               y * _width + x,
-               (uint8_t)((((float)bm.buffer[i]) / 256.0) * (64.0)));
-             ++i;
-          }
-     }
+             if ((y >= ey) && (y < gy) && (x >= ex) && (x < gx))
+               cp = (uint8_t)((((float)bm.buffer[i++]) / 256.0) * (64.0));
+             else
+               cp = 0;
 
-   W("            default: return 0x00;");
-   W("           }");
-   W("         break;");
+             W("0x%02x", cp);
+             if (x < _width - 1)
+               W(", ");
+          }
+        W(" }");
+        if (y < _height - 1) W(",");
+        W("\n");
+     }
+   W("     }");
+   if (idx < fm_charmap_count_get()) W(",");
+   W("\n");
 
    return 1;
 }
@@ -139,6 +143,9 @@ fm_output_size_adjust(void)
    fm_charmap_foreach(_size_autoset);
 }
 
+#undef W
+#define W(f, ...) fprintf(_out, f "\n", ## __VA_ARGS__)
+
 void
 fm_output_generate_c(void)
 {
@@ -155,9 +162,10 @@ fm_output_generate_c(void)
      }
 
    W("static %s const unsigned char _bitmap[%i][%i][%i] =",
-     (opts->avr_rom) ? "__attribute__((__progmem__))" : "",
-     fm_charmap_count_get(), _width, _height);
+     (opts->progmem) ? "__attribute__((__progmem__))" : "",
+     fm_charmap_count_get(), _height, _width);
    W("{");
+   fm_charmap_foreach(_gen_char);
    W("};");
    W("");
 
@@ -196,12 +204,7 @@ fm_output_generate_c(void)
    W("                  unsigned int y)");
    W("{");
    W("   unsigned int pixel = (y * %i) + x;", _width);
-   W("   switch (codepoint)");
-   W("     {");
-
-   fm_charmap_foreach(_gen_char);
-
-   W("     }");
+   W("   return _bitmap[pixel - 0x20][y][x];");
    W("}");
    W("");
 

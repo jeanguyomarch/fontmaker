@@ -23,12 +23,12 @@ struct _Fm_Opts
    char *h_file;
    char *map_file;
    char *prefix;
-   char *error_char;
 
    int   font_size;
    int   font_bits;
    int   verbosity;
-   int   avr_rom;
+
+   unsigned int progmem : 1;
 };
 
 struct _Fm_Freetype
@@ -62,6 +62,7 @@ FT_UInt fm_freetype_process_glyph(FT_ULong code, FT_GlyphSlot *gs);
 
 int fm_charmap_init(void);
 void fm_charmap_shutdown(void);
+int fm_charmap_generate(void);
 void fm_charmap_foreach(Fm_Charmap_Func func);
 unsigned int fm_charmap_count_get(void);
 unsigned int fm_charmap_error_char_index_get(void);

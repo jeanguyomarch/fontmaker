@@ -38,6 +38,9 @@ main(int    argc,
    status = fm_output_init();
    if (status != 0) goto err_output;
 
+   status = fm_charmap_generate();
+   if (status != 0) goto err_output;
+
    /* "Scripted" action */
    fm_output_size_adjust();
    fm_output_generate_c();

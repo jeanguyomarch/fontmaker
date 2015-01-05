@@ -10,11 +10,10 @@ static struct option _options[] =
      {"gc",         required_argument, 0, 'C'},
      {"gh",         required_argument, 0, 'H'},
      {"map-file",   required_argument, 0, 'm'},
-     {"error-char", required_argument, 0, 'e'},
      {"bits",       required_argument, 0, 'b'},
      {"prefix",     required_argument, 0, 'p'},
      {"font-size",  required_argument, 0, 's'},
-     {"avr-rom",    no_argument,       0, 'r'},
+     {"progmem",    no_argument,       0, 'P'},
      {"verbose",    no_argument,       0, 'v'},
      {"help",       no_argument,       0, 'h'},
      {0, 0, 0, 0}
@@ -30,14 +29,13 @@ _help(FILE *stream)
            "\n"
            "    --help, -h        Display this message\n"
            "    --verbose, -v     Increases verbosity\n"
-           "    --avr-rom, -r     Places the generated bitmap in ROM instead of RAM when possible (AVR)\n"
+           "    --progmem, -P     Places the generated bitmap in ROM instead of RAM when possible (AVR)\n"
            "\n"
            "    --font-file, -f   TTF input file path [REQUIRED]\n"
            "    --map-file, -m    File containing the glyphs to create [REQUIRED]\n"
            "    --font-size, -s   Font size (in points) to generate [REQUIRED]\n"
            "    --gc, -C          Output C code file path [DEFAULT: NONE]\n"
            "    --gh, -H          Output C code file path [DEFAULT: NONE]\n"
-           "    --error-char, -e  Character that must be used for unknown characters [DEFAULT: NONE]\n"
            "    --bits, -b        On how many bits is the output font coded? [DEFAULT: %i]\n"
            "    --prefix, -p      Prefix to prepend to the generated functions [DEFAULT: NONE]\n"
            "\n",
@@ -61,7 +59,7 @@ fm_opts_init(int    argc,
 
    while (1)
      {
-        c = getopt_long(argc, argv, "f:C:H:m:e:b:p:s:vhr", _options, &opt_idx);
+        c = getopt_long(argc, argv, "f:C:H:m:b:p:s:vhr", _options, &opt_idx);
         if (c == -1) break;
 
         switch (c)
@@ -70,8 +68,8 @@ fm_opts_init(int    argc,
               ++_opts.verbosity;
               break;
 
-           case 'r':
-              _opts.avr_rom = 1;
+           case 'P':
+              _opts.progmem = 1;
               break;
 
            case 'f':
@@ -90,10 +88,6 @@ fm_opts_init(int    argc,
               _opts.h_file = strdup(optarg);
               break;
 
-           case 'e':
-              _opts.error_char = strdup(optarg);
-              break;
-
            case 'b':
               _opts.font_bits = atoi(optarg);
               break;
@@ -108,10 +102,10 @@ fm_opts_init(int    argc,
 
            case 'h':
               _help(stdout);
-              return 0;
+              exit(EXIT_SUCCESS);
 
            case '?':
-              return errno;
+              exit(errno);
 
            default:
               c = errno;
@@ -157,16 +151,10 @@ fm_opts_init(int    argc,
                   _opts.font_bits, OPT_BITS_DEFAULT);
         _opts.font_bits = OPT_BITS_DEFAULT;
      }
-   if (_opts.error_char == NULL)
-     {
-        if (_opts.verbosity >= 2)
-          fprintf(stdout, "[--error-char] was [] defaults to [' ']\n");
-        _opts.error_char = strdup(" ");
-     }
    if (_opts.prefix == NULL)
      {
         if (_opts.verbosity >= 2)
-          fprintf(stdout, "[--prefix] was [] defaults to [\" \"]\n");
+          fprintf(stdout, "[--prefix] was [] defaults to [\"\"]\n");
         _opts.prefix = strdup("");
      }
 
@@ -181,7 +169,6 @@ fm_opts_shutdown(void)
    free(_opts.h_file);
    free(_opts.map_file);
    free(_opts.prefix);
-   free(_opts.error_char);
    memset(&_opts, 0, sizeof(Fm_Opts));
 }
 
