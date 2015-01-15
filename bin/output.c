@@ -240,7 +240,7 @@ fm_output_generate_c(void)
      }
    else
      {
-        W("   return _bitmap[codepoint - 0x20];");
+        W("   return _bitmap[codepoint - 0x20][y][x];");
      }
    W("}");
    W("");
