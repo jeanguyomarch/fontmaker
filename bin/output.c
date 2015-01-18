@@ -90,48 +90,44 @@ _gen_char(FT_ULong     code,
    if (opts->verbosity >= 2)
      fprintf(stdout, "Generate switch for [%lu] (%u)\n", code, idx);
 
-   if (!opts->progmem)
+
+   W("     {\n");
+   i = 0;
+   for (y = 0; y < _height; y++)
      {
-        W("     {\n");
-
-        i = 0;
-        for (y = 0; y < _height; y++)
+        W("          { ");
+        for (x = 0; x < _width; x++)
           {
-             W("          { ");
-             for (x = 0; x < _width; x++)
-               {
-                  if ((y >= ey) && (y < gy) && (x >= ex) && (x < gx))
-                    cp = (uint8_t)((((float)bm.buffer[i++]) / 256.0) * (64.0));
-                  else
-                    cp = 0;
+             if ((y >= ey) && (y < gy) && (x >= ex) && (x < gx))
+               cp = (uint8_t)((((float)bm.buffer[i++]) / 256.0) * (64.0));
+             else
+               cp = 0;
 
-                  W("0x%02x", cp);
-                  if (x < _width - 1)
-                    W(", ");
-               }
-             W(" }");
-             if (y < _height - 1) W(",");
-             W("\n");
+             W("0x%02x", cp);
+             if (x < _width - 1)
+               W(", ");
           }
-        W("     }");
-        if (idx < fm_charmap_count_get()) W(",");
+        W(" }");
+        if (y < _height - 1) W(",");
         W("\n");
      }
-   else
-     {
-        i = 0;
-        for (y = 0; y < _height; y++)
-          {
-             for (x = 0; x < _width; x++)
-               {
-                  if ((y >= ey) && (y < gy) && (x >= ex) && (x < gx))
-                    cp = (uint8_t)((((float)bm.buffer[i++]) / 256.0) * (64.0));
-                  else
-                    cp = 0;
-                  W("\\x%02x", cp);
-               }
-          }
-     }
+   W("     }");
+   if (idx < fm_charmap_count_get()) W(",");
+   W("\n");
+
+   /* Code below is to generate a single string with all codepoints */
+   //       i = 0;
+   //       for (y = 0; y < _height; y++)
+   //         {
+   //            for (x = 0; x < _width; x++)
+   //              {
+   //                 if ((y >= ey) && (y < gy) && (x >= ex) && (x < gx))
+   //                   cp = (uint8_t)((((float)bm.buffer[i++]) / 256.0) * (64.0));
+   //                 else
+   //                   cp = 0;
+   //                 W("\\x%02x", cp);
+   //              }
+   //         }
 
    return 1;
 }
@@ -181,23 +177,17 @@ fm_output_generate_c(void)
 
    if (opts->progmem)
      {
-        W("static __attribute__((__progmem__)) const unsigned char _bitmap[] =");
-        W("{");
-        fprintf(_out, "\"");
-        fm_charmap_foreach(_gen_char);
-        fprintf(_out, "\"\n");
-        W("};");
+        W("#include <avr/pgmspace.h>");
         W("");
      }
-   else
-     {
-        W("static const unsigned char _bitmap[%i][%i][%i] =",
-          fm_charmap_count_get(), _height, _width);
-        W("{");
-        fm_charmap_foreach(_gen_char);
-        W("};");
-        W("");
-     }
+   W("static const unsigned char _bitmap[%i][%i][%i] %s=",
+     fm_charmap_count_get(), _height, _width, (opts->progmem) ? "PROGMEM " : "");
+
+   W("{");
+   fm_charmap_foreach(_gen_char);
+   W("};");
+   W("");
+   //   }
 
    W("%s int", opts->attribute);
    W("%ssize_get(void)", opts->prefix);
@@ -235,8 +225,11 @@ fm_output_generate_c(void)
    W("{");
    if (opts->progmem)
      {
-        W("   return _bitmap[(codepoint - 0x20) * (%i * %i) + (y * %i) + x];",
-          _width, _height, _width);
+        W("   return pgm_read_byte_near(&(_bitmap[codepoint - 0x20][y][x]));");
+        //        unsigned char px;
+
+        // W("   return _bitmap[(codepoint - 0x20) * (%i * %i) + (y * %i) + x];",
+        //   _width, _height, _width);
      }
    else
      {
