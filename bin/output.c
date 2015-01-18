@@ -187,7 +187,6 @@ fm_output_generate_c(void)
    fm_charmap_foreach(_gen_char);
    W("};");
    W("");
-   //   }
 
    W("%s int", opts->attribute);
    W("%ssize_get(void)", opts->prefix);
@@ -226,8 +225,6 @@ fm_output_generate_c(void)
    if (opts->progmem)
      {
         W("   return pgm_read_byte_near(&(_bitmap[codepoint - 0x20][y][x]));");
-        //        unsigned char px;
-
         // W("   return _bitmap[(codepoint - 0x20) * (%i * %i) + (y * %i) + x];",
         //   _width, _height, _width);
      }
