@@ -238,6 +238,25 @@ fm_output_generate_c(void)
    FCLOSE();
 }
 
+static const char *
+_to_upper(const char *in)
+{
+   static char buf[512];
+   char *ptr = (char *)in;
+   char c;
+   int i = 0;
+
+   while ((c = *(ptr++)))
+     {
+        if (c >= 'a' && c <= 'z')
+          c -= 0x20;
+        buf[i++] = c;
+     }
+   buf[i] = 0;
+
+   return buf;
+}
+
 void
 fm_output_generate_h(void)
 {
@@ -259,7 +278,10 @@ fm_output_generate_h(void)
    W("#define __FONTMAKER__GENERATED_H__");
    W("");
 
-   W("%s int", opts->attribute);
+   W("#define %sCHAR_WIDTH %i", _to_upper(opts->prefix), _width);
+   W("#define %sCHAR_HEIGHT %i", _to_upper(opts->prefix), _height);
+
+      W("%s int", opts->attribute);
    W("%ssize_get(void);", opts->prefix);
    W("");
 
