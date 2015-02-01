@@ -10,18 +10,6 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 # Options
 option(WITH_EXAMPLES "Include examples" ON)
 
-# Check for flex
-find_program(FLEX flex)
-if (FLEX STREQUAL FLEX-NOTFOUND)
-   message(FATAL_ERROR "flex not found")
-endif ()
-
-# Check for gperf
-find_program(GPERF gperf)
-if (GPERF STREQUAL GPERF-NOTFOUND)
-   message(FATAL_ERROR "gperf not found")
-endif ()
-
 # Check for freetype
 find_package(PkgConfig)
 pkg_check_modules(FREETYPE REQUIRED freetype2)

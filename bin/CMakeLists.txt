@@ -1,22 +1,3 @@
-set(FLEX_IN ${CMAKE_CURRENT_SOURCE_DIR}/parser.l)
-set(FLEX_OUT ${CMAKE_CURRENT_BINARY_DIR}/parser.c)
-
-add_custom_command(
-   OUTPUT ${FLEX_OUT}
-   COMMAND ${FLEX} -o ${FLEX_OUT} ${FLEX_IN}
-)
-
-add_executable(fontmaker_parse
-   ${FLEX_OUT}
-)
-
-target_link_libraries(fontmaker_parse -ll)
-set_target_properties(fontmaker_parse PROPERTIES COMPILE_FLAGS
-   -std=c99
-)
-
-
-
 link_directories(${FREETYPE_LIBRARY_DIRS})
 include_directories(${FREETYPE_INCLUDE_DIRS})
 
@@ -31,14 +12,5 @@ add_executable(fontmaker
 )
 
 target_link_libraries(fontmaker ${FREETYPE_LIBRARIES})
-set_target_properties(fontmaker_parse PROPERTIES COMPILE_FLAGS
-   -std=c99
-   -Wall
-   -W
-   -Wshadow
-   -Wmissing-declarations
-)
-
-install(TARGETS fontmaker_parse RUNTIME DESTINATION bin)
 install(TARGETS fontmaker       RUNTIME DESTINATION bin)
 
