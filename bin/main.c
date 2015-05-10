@@ -45,6 +45,7 @@ main(int    argc,
    fm_output_size_adjust();
    fm_output_generate_c();
    fm_output_generate_h();
+   fm_output_generate_pgm();
 
    status = 0;
 

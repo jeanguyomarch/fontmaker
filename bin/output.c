@@ -308,3 +308,33 @@ fm_output_generate_h(void)
 
    FCLOSE();
 }
+
+static int
+_gen_pgm(FT_ULong     code,
+         unsigned int idx)
+{
+   FT_Bitmap bm;
+   FT_GlyphSlot gs;
+   char title[16];
+
+   fm_freetype_process_glyph(code, &gs);
+   bm = gs->bitmap;
+
+   snprintf(title, sizeof(title), "glyph_%lu.pgm", code);
+   printf("Generating [%s]...\n", title);
+   fm_pgm_bitmap_to_pgm(title, bm);
+
+   return 1;
+}
+
+void
+fm_output_generate_pgm(void)
+{
+   Fm_Opts *opts;
+
+   opts = fm_opts_get();
+   if (!opts->pgm) return;
+
+   fm_charmap_foreach(_gen_pgm);
+}
+

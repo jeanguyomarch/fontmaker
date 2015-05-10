@@ -6,17 +6,18 @@ static Fm_Opts _opts;
 
 static struct option _options[] =
 {
-     {"font-file",  required_argument, 0, 'f'},
-     {"gc",         required_argument, 0, 'C'},
-     {"gh",         required_argument, 0, 'H'},
-     {"map-file",   required_argument, 0, 'm'},
-     {"bits",       required_argument, 0, 'b'},
-     {"prefix",     required_argument, 0, 'p'},
-     {"attribute",  required_argument, 0, 'a'},
-     {"font-size",  required_argument, 0, 's'},
-     {"progmem",    no_argument,       0, 'P'},
-     {"verbose",    no_argument,       0, 'v'},
-     {"help",       no_argument,       0, 'h'},
+     {"font-file",     required_argument, 0, 'f'},
+     {"gc",            required_argument, 0, 'C'},
+     {"gh",            required_argument, 0, 'H'},
+     {"map-file",      required_argument, 0, 'm'},
+     {"bits",          required_argument, 0, 'b'},
+     {"prefix",        required_argument, 0, 'p'},
+     {"attribute",     required_argument, 0, 'a'},
+     {"font-size",     required_argument, 0, 's'},
+     {"progmem",       no_argument,       0, 'P'},
+     {"gpgm",          no_argument,       0, 'G'},
+     {"verbose",       no_argument,       0, 'v'},
+     {"help",          no_argument,       0, 'h'},
      {0, 0, 0, 0}
 };
 
@@ -36,7 +37,8 @@ _help(FILE *stream)
            "    --map-file, -m    File containing the glyphs to create [REQUIRED]\n"
            "    --font-size, -s   Font size (in points) to generate [REQUIRED]\n"
            "    --gc, -C          Output C code file path [DEFAULT: NONE]\n"
-           "    --gh, -H          Output C code file path [DEFAULT: NONE]\n"
+           "    --gh, -H          Output C  file path [DEFAULT: NONE]\n"
+           "    --gpgm, -G        Output PGM images per glyph [DEFAULT: NO]\n"
            "    --bits, -b        On how many bits is the output font coded? [DEFAULT: %i]\n"
            "    --prefix, -p      Prefix to prepend to the generated functions [DEFAULT: NONE]\n"
            "    --attribute, -a   Add an attribute to the function [DEFAULT: NONE]\n"
@@ -61,7 +63,7 @@ fm_opts_init(int    argc,
 
    while (1)
      {
-        c = getopt_long(argc, argv, "f:C:H:m:a:b:p:s:vhr", _options, &opt_idx);
+        c = getopt_long(argc, argv, "Gf:C:H:m:a:b:p:s:vhr", _options, &opt_idx);
         if (c == -1) break;
 
         switch (c)
@@ -72,6 +74,10 @@ fm_opts_init(int    argc,
 
            case 'P':
               _opts.progmem = 1;
+              break;
+
+           case 'G':
+              _opts.pgm = 1;
               break;
 
            case 'a':

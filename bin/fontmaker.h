@@ -30,6 +30,7 @@ struct _Fm_Opts
    int   verbosity;
 
    unsigned int progmem : 1;
+   unsigned int pgm : 1;
 };
 
 struct _Fm_Freetype
@@ -73,6 +74,7 @@ void fm_output_shutdown(void);
 void fm_output_size_adjust(void);
 void fm_output_generate_c(void);
 void fm_output_generate_h(void);
+void fm_output_generate_pgm(void);
 
 void fm_pgm_bitmap_to_pgm(const char *title, FT_Bitmap bm);
 
