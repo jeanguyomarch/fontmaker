@@ -1,23 +1,22 @@
-#include "font.h"
+#include "font.hxx"
 #include <stdio.h>
 
 int
 main(void)
 {
    int w, h;
+   Font f;
 
-   bounding_box_get(&w, &h);
+   f.bounding_box_get(w, h);
    printf("=== STATS ===\n"
           "size.........: %i\n"
           "w............: %i\n"
           "h............: %i\n"
-          "glyphs.......: %i\n"
-          "color bits...: %u\n",
-          size_get(),
+          "glyphs.......: %i\n",
+          f.size_get(),
           w,
           h,
-          glyphs_count_get(),
-          color_bits_get());
+          f.glyphs_count_get());
 
    return 0;
 }

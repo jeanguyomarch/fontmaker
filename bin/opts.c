@@ -9,6 +9,7 @@ static struct option _options[] =
      {"font-file",     required_argument, 0, 'f'},
      {"gc",            required_argument, 0, 'C'},
      {"gh",            required_argument, 0, 'H'},
+     {"ghpp",          required_argument, 0, 'x'},
      {"map-file",      required_argument, 0, 'm'},
      {"bits",          required_argument, 0, 'b'},
      {"prefix",        required_argument, 0, 'p'},
@@ -37,10 +38,12 @@ _help(FILE *stream)
            "    --map-file, -m    File containing the glyphs to create [REQUIRED]\n"
            "    --font-size, -s   Font size (in points) to generate [REQUIRED]\n"
            "    --gc, -C          Output C code file path [DEFAULT: NONE]\n"
-           "    --gh, -H          Output C  file path [DEFAULT: NONE]\n"
+           "    --gh, -H          Output C header file path [DEFAULT: NONE]\n"
+           "    --ghpp, -x        Output C++ header file path [DEFAULT: NONE]\n"
            "    --gpgm, -G        Output PGM images per glyph [DEFAULT: NO]\n"
            "    --bits, -b        On how many bits is the output font coded? [DEFAULT: %i]\n"
-           "    --prefix, -p      Prefix to prepend to the generated functions [DEFAULT: NONE]\n"
+           "    --prefix, -p      In C: prefix to prepend to the generated functions. [DEFAULT: NONE]\n"
+           "                      In C++: name of the class. [DEFAULT: Font]\n"
            "    --attribute, -a   Add an attribute to the function [DEFAULT: NONE]\n"
            "\n",
            OPT_BITS_DEFAULT);
@@ -63,7 +66,7 @@ fm_opts_init(int    argc,
 
    while (1)
      {
-        c = getopt_long(argc, argv, "Gf:C:H:m:a:b:p:s:vhr", _options, &opt_idx);
+        c = getopt_long(argc, argv, "Gf:C:x:H:m:a:b:p:s:vhr", _options, &opt_idx);
         if (c == -1) break;
 
         switch (c)
@@ -110,6 +113,10 @@ fm_opts_init(int    argc,
 
            case 's':
               _opts.font_size = atoi(optarg);
+              break;
+
+           case 'x':
+              _opts.hpp_file = strdup(optarg);
               break;
 
            case 'h':
@@ -186,6 +193,7 @@ fm_opts_shutdown(void)
    free(_opts.font_file);
    free(_opts.c_file);
    free(_opts.h_file);
+   free(_opts.hpp_file);
    free(_opts.map_file);
    free(_opts.prefix);
    free(_opts.attribute);

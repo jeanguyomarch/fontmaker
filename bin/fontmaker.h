@@ -21,6 +21,7 @@ struct _Fm_Opts
    char *font_file;
    char *c_file;
    char *h_file;
+   char *hpp_file;
    char *map_file;
    char *prefix;
    char *attribute;
@@ -74,6 +75,7 @@ void fm_output_shutdown(void);
 void fm_output_size_adjust(void);
 void fm_output_generate_c(void);
 void fm_output_generate_h(void);
+void fm_output_generate_hpp(void);
 void fm_output_generate_pgm(void);
 
 void fm_pgm_bitmap_to_pgm(const char *title, FT_Bitmap bm);

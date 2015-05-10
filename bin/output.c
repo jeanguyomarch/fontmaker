@@ -204,7 +204,7 @@ fm_output_generate_c(void)
    W("");
 
    W("%s int", opts->attribute);
-   W("%sglyphs_available_get(void)", opts->prefix);
+   W("%sglyphs_count_get(void)", opts->prefix);
    W("{");
    W("   return %i;", fm_charmap_count_get());
    W("}");
@@ -267,10 +267,10 @@ fm_output_generate_h(void)
 
    f = opts->h_file;
    if (!f) return;
-   _out = fopen(opts->h_file, "w");
+   _out = fopen(f, "w");
    if (!_out)
      {
-        fprintf(stderr, "*** Failed to open C file [%s]\n", opts->c_file);
+        fprintf(stderr, "*** Failed to open C header file [%s]\n", f);
         return;
      }
 
@@ -295,7 +295,7 @@ fm_output_generate_h(void)
    W("");
 
    W("%s int", opts->attribute);
-   W("%sglyphs_available_get(void);", opts->prefix);
+   W("%sglyphs_count_get(void);", opts->prefix);
    W("");
 
    W("%s unsigned int", opts->attribute);
@@ -311,6 +311,86 @@ fm_output_generate_h(void)
    W("#ifdef __cplusplus");
    W("}");
    W("#endif /* __cplusplus */");
+   W("");
+
+   W("#endif");
+   W("");
+
+   FCLOSE(_out);
+}
+
+void
+fm_output_generate_cpp(void)
+{
+}
+
+void
+fm_output_generate_hpp(void)
+{
+   Fm_Opts *opts;
+   const char *f, *klass;
+
+   opts = fm_opts_get();
+
+   f = opts->hpp_file;
+   if (!f) return;
+   _out = fopen(f, "w");
+   if (!_out)
+     {
+        fprintf(stderr, "*** Failed to open CPP header file [%s]\n", f);
+        return;
+     }
+   klass = (*opts->prefix) ? opts->prefix : "Font";
+
+   W("#ifndef __FONTMAKER__GENERATED_HPP__");
+   W("#define __FONTMAKER__GENERATED_HPP__");
+   W("");
+
+   W("class %s {", klass);
+   W("  private:\n"
+     "     static const unsigned char _bitmap[%i][%i][%i];",
+     fm_charmap_count_get(), _height, _width
+   );
+   W("  public:");
+   W("    int size_get(void) const {\n"
+     "        return %i;\n"
+     "     }",
+     opts->font_size
+   );
+   W("     int char_width_get(void) const {\n"
+     "        return %i;\n"
+     "     }",
+     _width
+   );
+   W("     int char_height_get(void) const {\n"
+     "        return %i;\n"
+     "     }",
+     _height
+   );
+   W("     void bounding_box_get(int &w, int &h) const {\n"
+     "        w = %i;\n"
+     "        h = %i;\n"
+     "     }",
+     _width, _height
+   );
+   W("     int glyphs_count_get(void) const {\n"
+     "        return %i;\n"
+     "     }",
+     fm_charmap_count_get()
+   );
+   W("     unsigned char glyph_pixel_get(const unsigned int index,\n"
+     "                                   const unsigned int x,\n"
+     "                                   const unsigned int y) const {\n"
+     "        return _bitmap[index][y][x];\n"
+     "     }"
+   );
+   W("};");
+   W("");
+
+   W("const unsigned char %s::_bitmap[%i][%i][%i] = {",
+     klass, fm_charmap_count_get(), _height, _width);
+   fm_charmap_foreach(_gen_char);
+   W("};");
    W("");
 
    W("#endif");
