@@ -9,11 +9,13 @@ set(CHARMAP   ${CMAKE_CURRENT_SOURCE_DIR}/charmap.fm)
 add_custom_command(
    OUTPUT ${OUT_C}
    COMMAND ${FONTMAKER} --gc ${OUT_C} --font-file=${FONT} --map-file=${CHARMAP} --font-size=12
+   DEPENDS ${CHARMAP}
 )
 
 add_custom_command(
    OUTPUT ${OUT_H}
    COMMAND ${FONTMAKER} --gh ${OUT_H} --font-file=${FONT} --map-file=${CHARMAP} --font-size=12
+   DEPENDS ${CHARMAP}
 )
 
 include_directories(fontmaker_test ${CMAKE_CURRENT_BINARY_DIR})
