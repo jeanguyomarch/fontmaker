@@ -278,6 +278,11 @@ fm_output_generate_h(void)
    W("#define __FONTMAKER__GENERATED_H__");
    W("");
 
+   W("#ifdef __cplusplus");
+   W("extern \"C\" {");
+   W("#endif /* __cplusplus */");
+   W("");
+
    W("#define %sCHAR_WIDTH %i", _to_upper(opts->prefix), _width);
    W("#define %sCHAR_HEIGHT %i", _to_upper(opts->prefix), _height);
 
@@ -301,6 +306,11 @@ fm_output_generate_h(void)
    W("%sglyph_pixel_get(unsigned int codepoint,", opts->prefix);
    W("                  unsigned int x,");
    W("                  unsigned int y);");
+   W("");
+
+   W("#ifdef __cplusplus");
+   W("}");
+   W("#endif /* __cplusplus */");
    W("");
 
    W("#endif");
