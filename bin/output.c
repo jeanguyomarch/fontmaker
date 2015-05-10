@@ -6,7 +6,7 @@ static int   _bearing_y_up   = 0;
 static int   _bearing_y_down = 0;
 static FILE *_out            = NULL;
 
-#define FCLOSE() do { fclose(_out); _out = NULL; } while (0)
+#define FCLOSE(out_) do { fclose(out_); out_ = NULL; } while (0)
 
 static int
 _size_autoset(FT_ULong     code,
@@ -235,7 +235,7 @@ fm_output_generate_c(void)
    W("}");
    W("");
 
-   FCLOSE();
+   FCLOSE(_out);
 }
 
 static const char *
@@ -316,7 +316,7 @@ fm_output_generate_h(void)
    W("#endif");
    W("");
 
-   FCLOSE();
+   FCLOSE(_out);
 }
 
 static int
