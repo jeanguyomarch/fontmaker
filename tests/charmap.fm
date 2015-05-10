@@ -11,6 +11,8 @@ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 @ , . : ; ' " $ - _ ( ) ? ! #
 
 ## Some accents
-## Unicode multi-byte is unsafe for now
-## é è ê à É È Ê À ç Ç
+é è ê à É È Ê À ç Ç
+
+## And various stuff
+∑ ⁄ π ¬ œ ∂ ﬁ √ ≈ ∞
 
