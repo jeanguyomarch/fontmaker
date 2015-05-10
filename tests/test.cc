@@ -1,6 +1,8 @@
 #include "font.hxx"
 #include <stdio.h>
 
+using namespace fontmaker;
+
 int
 main(void)
 {

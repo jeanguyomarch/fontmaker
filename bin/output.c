@@ -335,6 +335,11 @@ fm_output_generate_hpp(void)
    W("#define __FONTMAKER__GENERATED_HPP__");
    W("");
 
+   if (opts->namespace_name)
+     {
+        W("namespace %s {\n", opts->namespace_name);
+     }
+
    W("class %s {", klass);
    W("  private:\n"
      "     static const unsigned char _bitmap[%i][%i][%i];",
@@ -381,6 +386,11 @@ fm_output_generate_hpp(void)
    fm_charmap_foreach(_gen_char);
    W("};");
    W("");
+
+   if (opts->namespace_name)
+     {
+        W("}\n");
+     }
 
    W("#endif");
    W("");

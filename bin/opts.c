@@ -12,6 +12,7 @@ static struct option _options[] =
      {"prefix",        required_argument, 0, 'p'},
      {"attribute",     required_argument, 0, 'a'},
      {"font-size",     required_argument, 0, 's'},
+     {"namespace",     required_argument, 0, 'n'},
      {"progmem",       no_argument,       0, 'P'},
      {"gpgm",          no_argument,       0, 'G'},
      {"verbose",       no_argument,       0, 'v'},
@@ -38,6 +39,7 @@ _help(FILE *stream)
            "    --gh, -H          Output C header file path [DEFAULT: NONE]\n"
            "    --ghpp, -x        Output C++ header file path [DEFAULT: NONE]\n"
            "    --gpgm, -G        Output PGM images per glyph [DEFAULT: NO]\n"
+           "    --namespace, -n   Provide a namespace used when C++ is generated [DEFAULT: NONE]\n"
            "    --prefix, -p      In C: prefix to prepend to the generated functions. [DEFAULT: NONE]\n"
            "                      In C++: name of the class. [DEFAULT: Font]\n"
            "    --attribute, -a   Add an attribute to the function [DEFAULT: NONE]\n"
@@ -61,7 +63,7 @@ fm_opts_init(int    argc,
 
    while (1)
      {
-        c = getopt_long(argc, argv, "Gf:C:x:H:m:a:p:s:vhr", _options, &opt_idx);
+        c = getopt_long(argc, argv, "Gf:C:x:H:m:a:p:n:s:vhr", _options, &opt_idx);
         if (c == -1) break;
 
         switch (c)
@@ -76,6 +78,10 @@ fm_opts_init(int    argc,
 
            case 'G':
               _opts.pgm = 1;
+              break;
+
+           case 'n':
+              _opts.namespace_name = strdup(optarg);
               break;
 
            case 'a':
@@ -175,6 +181,7 @@ void
 fm_opts_shutdown(void)
 {
    free(_opts.font_file);
+   free(_opts.namespace_name);
    free(_opts.c_file);
    free(_opts.h_file);
    free(_opts.hpp_file);

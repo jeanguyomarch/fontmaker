@@ -25,6 +25,7 @@ struct _Fm_Opts
    char *map_file;
    char *prefix;
    char *attribute;
+   char *namespace_name;
 
    int   font_size;
    int   verbosity;

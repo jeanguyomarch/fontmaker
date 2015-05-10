@@ -21,7 +21,7 @@ add_custom_command(
 
 add_custom_command(
    OUTPUT ${OUT_HXX}
-   COMMAND ${FONTMAKER} --ghpp ${OUT_HXX} --font-file=${FONT} --map-file=${CHARMAP} --font-size=12
+   COMMAND ${FONTMAKER} --ghpp ${OUT_HXX} --font-file=${FONT} --map-file=${CHARMAP} --font-size=12 --namespace fontmaker
    DEPENDS ${CHARMAP}
 )
 
