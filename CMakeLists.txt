@@ -14,6 +14,11 @@ option(WITH_EXAMPLES "Include examples" ON)
 find_package(PkgConfig)
 pkg_check_modules(FREETYPE REQUIRED freetype2)
 
+find_program(FLEX flex)
+if (FLEX STREQUAL FLEX-NOTFOUND)
+   message(FATAL_ERROR "flex not found")
+endif ()
+
 # Cmake tree
 add_subdirectory(bin)
 add_subdirectory(tests)

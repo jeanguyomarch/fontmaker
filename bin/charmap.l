@@ -1,7 +1,35 @@
+%{
 #include "fontmaker.h"
 
 static unsigned int  *_glyphs        = NULL;
 static unsigned int   _glyphs_count  = 0;
+
+static inline int _add(unsigned int glyph);
+
+%}
+
+%%
+##.*            ;
+[ \t\n]         ;
+[^\ \n\t]+      {
+                  char utf8[8];
+                  unsigned int code;
+
+                  snprintf(utf8, sizeof(utf8), "%s", yytext);
+                  code = fm_utf8_to_unicode(utf8);
+                  if (code == 0)
+                    {
+                       fprintf(stderr, "*** Failed to convert utf8 [%s] to unicode\n", utf8);
+                    }
+                  else
+                    {
+                       if (!_add(code))
+                         {
+                            fprintf(stderr, "*** Failed to register codepoint [%u]\n", code);
+                         }
+                    }
+                }
+%%
 
 
 /*============================================================================*
@@ -30,7 +58,6 @@ _add(unsigned int glyph)
    return 1;
 }
 
-
 /*============================================================================*
  *                                     API                                    *
  *============================================================================*/
@@ -38,38 +65,6 @@ _add(unsigned int glyph)
 int
 fm_charmap_init(void)
 {
-   return 0;
-}
-
-int
-fm_charmap_generate(void)
-{
-   Fm_Opts *opts;
-   int ret = 0;
-   char *ptr, c;
-   unsigned int code;
-   unsigned int i;
-   char utf8[8];
-
-   memset(utf8, 0, sizeof(utf8));
-
-   /* Built-in set (from ' ' to '~' (7-bits ASCII)) */
-   for (i = 0x20; i <= 0x7e; i++)
-     {
-        utf8[0] = i; /* Can only be on one byte */
-        code = fm_utf8_to_unicode(utf8);
-        if (code == 0)
-          {
-             fprintf(stderr, "*** Failed to convert UTF-8 [%s]\n", utf8);
-             return 1;
-          }
-        if (!_add(code))
-          {
-             fprintf(stderr, "*** Failed to register codepoint [%u]\n", code);
-             return 1;
-          }
-     }
-
    return 0;
 }
 
@@ -98,5 +93,27 @@ unsigned int
 fm_charmap_count_get(void)
 {
    return _glyphs_count;
+}
+
+int
+fm_charmap_generate(void)
+{
+   unsigned int code;
+   unsigned int i;
+   FILE *fh;
+   Fm_Opts *opts;
+
+   opts = fm_opts_get();
+   fh = fopen(opts->map_file, "r");
+   if (!fh)
+     {
+        fprintf(stderr,"*** Failed to open charmap file [%s]\n", opts->map_file);
+        return 1;
+     }
+   yyin = fh;
+   yylex();
+   fclose(fh);
+
+   return 0;
 }
 

@@ -22,7 +22,8 @@ Requirements
 
 Fontmaker relies on:
 - `cmake` as a build system;
-- `freetype2` to extract font properties and generate bitmaps from TTF files.
+- `freetype2` to extract font properties and generate bitmaps from TTF files;
+- `flex` to parse the charmap.
 
 
 Usage
