@@ -2,8 +2,6 @@
 
 static Fm_Opts _opts;
 
-#define OPT_BITS_DEFAULT 8
-
 static struct option _options[] =
 {
      {"font-file",     required_argument, 0, 'f'},
@@ -11,7 +9,6 @@ static struct option _options[] =
      {"gh",            required_argument, 0, 'H'},
      {"ghpp",          required_argument, 0, 'x'},
      {"map-file",      required_argument, 0, 'm'},
-     {"bits",          required_argument, 0, 'b'},
      {"prefix",        required_argument, 0, 'p'},
      {"attribute",     required_argument, 0, 'a'},
      {"font-size",     required_argument, 0, 's'},
@@ -41,12 +38,10 @@ _help(FILE *stream)
            "    --gh, -H          Output C header file path [DEFAULT: NONE]\n"
            "    --ghpp, -x        Output C++ header file path [DEFAULT: NONE]\n"
            "    --gpgm, -G        Output PGM images per glyph [DEFAULT: NO]\n"
-           "    --bits, -b        On how many bits is the output font coded? [DEFAULT: %i]\n"
            "    --prefix, -p      In C: prefix to prepend to the generated functions. [DEFAULT: NONE]\n"
            "                      In C++: name of the class. [DEFAULT: Font]\n"
            "    --attribute, -a   Add an attribute to the function [DEFAULT: NONE]\n"
-           "\n",
-           OPT_BITS_DEFAULT);
+           "\n");
 }
 
 
@@ -66,7 +61,7 @@ fm_opts_init(int    argc,
 
    while (1)
      {
-        c = getopt_long(argc, argv, "Gf:C:x:H:m:a:b:p:s:vhr", _options, &opt_idx);
+        c = getopt_long(argc, argv, "Gf:C:x:H:m:a:p:s:vhr", _options, &opt_idx);
         if (c == -1) break;
 
         switch (c)
@@ -101,10 +96,6 @@ fm_opts_init(int    argc,
 
            case 'H':
               _opts.h_file = strdup(optarg);
-              break;
-
-           case 'b':
-              _opts.font_bits = atoi(optarg);
               break;
 
            case 'p':
@@ -163,13 +154,6 @@ fm_opts_init(int    argc,
      }
 
    /* Default arguments */
-   if (_opts.font_bits <= 0)
-     {
-        if (_opts.verbosity >= 2)
-          fprintf(stdout, "[--font-bits] was [%i] defaults to [%i]\n",
-                  _opts.font_bits, OPT_BITS_DEFAULT);
-        _opts.font_bits = OPT_BITS_DEFAULT;
-     }
    if (_opts.prefix == NULL)
      {
         if (_opts.verbosity >= 2)

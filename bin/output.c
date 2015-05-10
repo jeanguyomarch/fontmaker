@@ -210,13 +210,6 @@ fm_output_generate_c(void)
    W("}");
    W("");
 
-   W("%s unsigned int", opts->attribute);
-   W("%scolor_bits_get(void)", opts->prefix);
-   W("{");
-   W("   return %i;", opts->font_bits);
-   W("}");
-   W("");
-
    W("%s unsigned char", opts->attribute);
    W("%sglyph_pixel_get(unsigned int codepoint,", opts->prefix);
    W("                  unsigned int x,");
@@ -296,10 +289,6 @@ fm_output_generate_h(void)
 
    W("%s int", opts->attribute);
    W("%sglyphs_count_get(void);", opts->prefix);
-   W("");
-
-   W("%s unsigned int", opts->attribute);
-   W("%scolor_bits_get(void);", opts->prefix);
    W("");
 
    W("%s unsigned char", opts->attribute);

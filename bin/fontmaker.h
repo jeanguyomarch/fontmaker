@@ -27,7 +27,6 @@ struct _Fm_Opts
    char *attribute;
 
    int   font_size;
-   int   font_bits;
    int   verbosity;
 
    unsigned int progmem : 1;

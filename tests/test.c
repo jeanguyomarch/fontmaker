@@ -11,13 +11,11 @@ main(void)
           "size.........: %i\n"
           "w............: %i\n"
           "h............: %i\n"
-          "glyphs.......: %i\n"
-          "color bits...: %u\n",
+          "glyphs.......: %i\n",
           size_get(),
           w,
           h,
-          glyphs_count_get(),
-          color_bits_get());
+          glyphs_count_get());
 
    return 0;
 }
