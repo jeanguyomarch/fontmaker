@@ -45,7 +45,7 @@ struct _Fm_Freetype
    int          bearing_y_down;
 };
 
-typedef int (*Fm_Charmap_Func)(FT_ULong code, unsigned int idx);
+typedef int (*Fm_Charmap_Func)(FT_ULong code, unsigned int idx, const char *utf8);
 typedef void (*Fm_Func)(FT_ULong code, FT_Bitmap bm, FT_Glyph_Metrics mx);
 
 /*============================================================================*
@@ -81,6 +81,12 @@ void fm_output_generate_pgm(void);
 void fm_pgm_bitmap_to_pgm(const char *title, FT_Bitmap bm);
 
 unsigned int fm_utf8_to_unicode(const char *str);
+
+int fm_gperf_init(void);
+void fm_gperf_shutdown(void);
+void fm_gperf_config_gen(void);
+int fm_gperf_compile(FILE *fh);
+
 
 #ifdef UNUSED
 # undef UNUSED

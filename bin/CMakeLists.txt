@@ -4,6 +4,10 @@ include_directories(
    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+add_definitions(
+   -DCMAKE_TMP_FILE="${CMAKE_CURRENT_BINARY_DIR}/tmp.gperf"
+)
+
 set(FLEX_IN ${CMAKE_CURRENT_SOURCE_DIR}/charmap.l)
 set(FLEX_OUT ${CMAKE_CURRENT_BINARY_DIR}/charmap.c)
 
@@ -18,6 +22,7 @@ add_executable(fontmaker
    ${CMAKE_CURRENT_SOURCE_DIR}/opts.c
    ${CMAKE_CURRENT_SOURCE_DIR}/freetype.c
    ${CMAKE_CURRENT_SOURCE_DIR}/output.c
+   ${CMAKE_CURRENT_SOURCE_DIR}/gperf.c
    ${CMAKE_CURRENT_SOURCE_DIR}/pgm.c
    ${CMAKE_CURRENT_SOURCE_DIR}/utf8.c
    ${FLEX_OUT}
