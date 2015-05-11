@@ -59,7 +59,6 @@ fm_gperf_compile(FILE *fh)
    Fm_Opts *opts;
    const char *lang;
    char prog[128];
-   int ret;
    FILE *exe;
    char buf[4096];
    char *ptr;

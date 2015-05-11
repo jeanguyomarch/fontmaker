@@ -52,6 +52,8 @@ _gen_char(FT_ULong      code,
    int width, height;
    unsigned char cp;
 
+   UNUSED(utf8);
+
    opts = fm_opts_get();
 
    fm_freetype_process_glyph(code, &gs);
@@ -325,7 +327,6 @@ fm_output_generate_hpp(void)
 {
    Fm_Opts *opts;
    const char *f, *klass;
-   int ret;
 
    opts = fm_opts_get();
 
@@ -414,6 +415,8 @@ _gen_pgm(FT_ULong      code,
    FT_Bitmap bm;
    FT_GlyphSlot gs;
    char title[16];
+
+   UNUSED(idx);
 
    fm_freetype_process_glyph(code, &gs);
    bm = gs->bitmap;

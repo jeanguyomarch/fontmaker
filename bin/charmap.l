@@ -109,8 +109,6 @@ fm_charmap_count_get(void)
 int
 fm_charmap_generate(void)
 {
-   unsigned int code;
-   unsigned int i;
    FILE *fh;
    Fm_Opts *opts;
 
