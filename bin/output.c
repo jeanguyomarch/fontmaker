@@ -202,30 +202,30 @@ fm_output_generate_c(void)
         return;
      }
 
-   W("%s int", opts->attribute);
-   W("%ssize_get(void)", opts->prefix);
+   W("%s int", opts->attribute ?: "");
+   W("%ssize_get(void)", opts->prefix ?: "");
    W("{");
    W("   return %i;", opts->font_size);
    W("}");
    W("");
 
-   W("%s void", opts->attribute);
-   W("%sbounding_box_get(int *w, int *h)", opts->prefix);
+   W("%s void", opts->attribute ?: "");
+   W("%sbounding_box_get(int *w, int *h)", opts->prefix ?: "");
    W("{");
    W("   if (w) *w = %i;", _width);
    W("   if (h) *h = %i;", _height);
    W("}");
    W("");
 
-   W("%s int", opts->attribute);
-   W("%sglyphs_count_get(void)", opts->prefix);
+   W("%s int", opts->attribute ?: "");
+   W("%sglyphs_count_get(void)", opts->prefix ?: "");
    W("{");
    W("   return %i;", fm_charmap_count_get());
    W("}");
    W("");
 
-   W("%s unsigned char", opts->attribute);
-   W("%sglyph_pixel_get(unsigned int codepoint,", opts->prefix);
+   W("%s unsigned char", opts->attribute ?: "");
+   W("%sglyph_pixel_get(unsigned int codepoint,", opts->prefix ?: "");
    W("                  unsigned int x,");
    W("                  unsigned int y)");
    W("{");
@@ -252,6 +252,8 @@ _to_upper(const char *in)
    char *ptr = (char *)in;
    char c;
    int i = 0;
+
+   if (ptr == NULL) return "";
 
    while ((c = *(ptr++)))
      {
@@ -293,20 +295,20 @@ fm_output_generate_h(void)
    W("#define %sCHAR_WIDTH %i", _to_upper(opts->prefix), _width);
    W("#define %sCHAR_HEIGHT %i", _to_upper(opts->prefix), _height);
 
-      W("%s int", opts->attribute);
-   W("%ssize_get(void);", opts->prefix);
+      W("%s int", opts->attribute ?: "");
+   W("%ssize_get(void);", opts->prefix ?: "");
    W("");
 
-   W("%s void", opts->attribute);
-   W("%sbounding_box_get(int *w, int *h);", opts->prefix);
+   W("%s void", opts->attribute ?: "");
+   W("%sbounding_box_get(int *w, int *h);", opts->prefix ?: "");
    W("");
 
-   W("%s int", opts->attribute);
-   W("%sglyphs_count_get(void);", opts->prefix);
+   W("%s int", opts->attribute ?: "");
+   W("%sglyphs_count_get(void);", opts->prefix ?: "");
    W("");
 
-   W("%s unsigned char", opts->attribute);
-   W("%sglyph_pixel_get(unsigned int codepoint,", opts->prefix);
+   W("%s unsigned char", opts->attribute ?: "");
+   W("%sglyph_pixel_get(unsigned int codepoint,", opts->prefix ?: "");
    W("                  unsigned int x,");
    W("                  unsigned int y);");
    W("");
@@ -338,7 +340,7 @@ fm_output_generate_hpp(void)
         fprintf(stderr, "*** Failed to open CPP header file [%s]\n", f);
         return;
      }
-   klass = (*opts->prefix) ? opts->prefix : "Font";
+   klass = opts->prefix ?: "Font";
 
    W("#ifndef __FONTMAKER__GENERATED_HPP__");
    W("#define __FONTMAKER__GENERATED_HPP__");

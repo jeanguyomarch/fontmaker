@@ -81,31 +81,31 @@ fm_opts_init(int    argc,
               break;
 
            case 'n':
-              _opts.namespace_name = strdup(optarg);
+              _opts.namespace_name = optarg;
               break;
 
            case 'a':
-              _opts.attribute = strdup(optarg);
+              _opts.attribute = optarg;
               break;
 
            case 'f':
-              _opts.font_file = strdup(optarg);
+              _opts.font_file = optarg;
               break;
 
            case 'm':
-              _opts.map_file = strdup(optarg);
+              _opts.map_file = optarg;
               break;
 
            case 'C':
-              _opts.c_file = strdup(optarg);
+              _opts.c_file = optarg;
               break;
 
            case 'H':
-              _opts.h_file = strdup(optarg);
+              _opts.h_file = optarg;
               break;
 
            case 'p':
-              _opts.prefix = strdup(optarg);
+              _opts.prefix = optarg;
               break;
 
            case 's':
@@ -113,7 +113,7 @@ fm_opts_init(int    argc,
               break;
 
            case 'x':
-              _opts.hpp_file = strdup(optarg);
+              _opts.hpp_file = optarg;
               break;
 
            case 'h':
@@ -159,35 +159,12 @@ fm_opts_init(int    argc,
         return 1;
      }
 
-   /* Default arguments */
-   if (_opts.prefix == NULL)
-     {
-        if (_opts.verbosity >= 2)
-          fprintf(stdout, "[--prefix] was [] defaults to [\"\"]\n");
-        _opts.prefix = strdup("");
-     }
-   if (_opts.attribute == NULL)
-     {
-        if (_opts.verbosity >= 2)
-          fprintf(stdout, "[--attribute] was [] defaults to [\"\"]\n");
-        _opts.attribute = strdup("");
-     }
-   // TODO Check memory is allocated
-
    return 0;
 }
 
 void
 fm_opts_shutdown(void)
 {
-   free(_opts.font_file);
-   free(_opts.namespace_name);
-   free(_opts.c_file);
-   free(_opts.h_file);
-   free(_opts.hpp_file);
-   free(_opts.map_file);
-   free(_opts.prefix);
-   free(_opts.attribute);
    memset(&_opts, 0, sizeof(Fm_Opts));
 }
 
