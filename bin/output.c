@@ -321,11 +321,6 @@ fm_output_generate_h(void)
 }
 
 void
-fm_output_generate_cpp(void)
-{
-}
-
-void
 fm_output_generate_hpp(void)
 {
    Fm_Opts *opts;
