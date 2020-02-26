@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <stdint.h>
 #include <ft2build.h>
-#include <ftlcdfil.h>
+#include FT_LCD_FILTER_H
 #include FT_FREETYPE_H
 
 typedef struct _Fm_Opts Fm_Opts;

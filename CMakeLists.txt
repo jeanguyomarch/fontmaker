@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8)
 project(fontmaker C CXX)
 
 set(PROJECT_DESCRIPTION "Generate bitmap fonts for embedded LCD")
-set(PROJECT_URL "http://jeanguyomarch.github.io/fontmaker/")
 
 set(CMAKE_COLOR_MAKEFILE ON)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
