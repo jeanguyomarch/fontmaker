@@ -48,8 +48,6 @@ _gen_char(FT_ULong     code,
    int width, height;
    unsigned char cp;
 
-   UNUSED(utf8);
-
    opts = fm_opts_get();
 
    fm_freetype_process_glyph(code, &gs);
@@ -280,10 +278,8 @@ fm_output_generate_h(void)
    W("#endif /* __cplusplus */");
    W("");
 
-   W("#define %sCHAR_WIDTH %i", _to_upper(opts->prefix), _width);
-   W("#define %sCHAR_HEIGHT %i", _to_upper(opts->prefix), _height);
 
-      W("%s int", opts->attribute ?: "");
+   W("%s int", opts->attribute ?: "");
    W("%ssize_get(void);", opts->prefix ?: "");
    W("");
 
