@@ -34,10 +34,6 @@ main(int    argc,
    status = fm_charmap_init();
    if (status != 0) goto err_charmap;
 
-   /* Gperf status */
-   status = fm_gperf_init();
-   if (status != 0) goto err_gperf;
-
    /* Output status */
    status = fm_output_init();
    if (status != 0) goto err_output;
@@ -46,7 +42,6 @@ main(int    argc,
    if (status != 0) goto err_output;
 
    /* "Scripted" action */
-   fm_gperf_config_gen();
    fm_output_size_adjust();
    fm_output_generate_c();
    fm_output_generate_h();
@@ -58,8 +53,6 @@ main(int    argc,
    /* Shutdown */
    fm_output_shutdown();
 err_output:
-   fm_gperf_shutdown();
-err_gperf:
    fm_charmap_shutdown();
 err_charmap:
    fm_freetype_shutdown();

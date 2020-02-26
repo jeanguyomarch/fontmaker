@@ -9,15 +9,12 @@ static FILE *_out            = NULL;
 #define FCLOSE(out_) do { fclose(out_); out_ = NULL; } while (0)
 
 static int
-_size_autoset(FT_ULong      code,
-              unsigned int  idx,
-              const char   *utf8)
+_size_autoset(FT_ULong     code,
+              unsigned int idx)
 {
    FT_GlyphSlot gs;
    FT_Glyph_Metrics mx;
    int w, h, bd, bu;
-
-   UNUSED(utf8);
 
    fm_freetype_process_glyph(code, &gs);
    mx = gs->metrics;
@@ -38,9 +35,8 @@ _size_autoset(FT_ULong      code,
 }
 
 static int
-_gen_char(FT_ULong      code,
-          unsigned int  idx,
-          const char   *utf8)
+_gen_char(FT_ULong     code,
+          unsigned int idx)
 {
    Fm_Opts *opts;
    FT_GlyphSlot gs;
@@ -170,7 +166,6 @@ void
 fm_output_generate_c(void)
 {
    Fm_Opts *opts;
-   int ret;
 
    opts = fm_opts_get();
 
@@ -194,13 +189,6 @@ fm_output_generate_c(void)
    fm_charmap_foreach(_gen_char);
    W("};");
    W("");
-
-   ret = fm_gperf_compile(_out);
-   if (ret != 0)
-     {
-        fprintf(stderr, "*** gperf failed\n");
-        return;
-     }
 
    W("%s int", opts->attribute ?: "");
    W("%ssize_get(void)", opts->prefix ?: "");
@@ -410,9 +398,8 @@ fm_output_generate_hpp(void)
 }
 
 static int
-_gen_pgm(FT_ULong      code,
-         unsigned int  idx,
-         const char   *utf8)
+_gen_pgm(FT_ULong     code,
+         unsigned int idx)
 {
    FT_Bitmap bm;
    FT_GlyphSlot gs;
@@ -424,7 +411,7 @@ _gen_pgm(FT_ULong      code,
    bm = gs->bitmap;
 
    snprintf(title, sizeof(title), "glyph_%lu.pgm", code);
-   printf("Generating [%s] for \"%s\"...\n", title, utf8);
+   printf("Generating [%s]...\n", title);
    fm_pgm_bitmap_to_pgm(title, bm);
 
    return 1;

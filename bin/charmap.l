@@ -1,15 +1,10 @@
 %{
 #include "fontmaker.h"
 
-typedef struct {
-   char          utf8[8];
-   unsigned int  codepoint;
-} Entry;
+static unsigned int  *_glyphs        = NULL;
+static unsigned int   _glyphs_count  = 0;
 
-static Entry        *_glyphs        = NULL;
-static unsigned int  _glyphs_count  = 0;
-
-static inline int _add(unsigned int glyph, const char *utf8);
+static inline int _add(unsigned int glyph);
 
 %}
 
@@ -28,7 +23,7 @@ static inline int _add(unsigned int glyph, const char *utf8);
                     }
                   else
                     {
-                       if (!_add(code, utf8))
+                       if (!_add(code))
                          {
                             fprintf(stderr, "*** Failed to register codepoint [%u]\n", code);
                          }
@@ -42,20 +37,16 @@ static inline int _add(unsigned int glyph, const char *utf8);
  *============================================================================*/
 
 static inline int
-_add(unsigned int  glyph,
-     const char   *utf8)
+_add(unsigned int glyph)
 {
    static unsigned int size_max = 0;
    void *tmp;
    unsigned int len;
-   Entry e;
-
-   memset(&e, 0, sizeof(e));
 
 #define _REALLOC_ELEMS_STEP 8
    if (size_max == _glyphs_count)
      {
-        len = (_glyphs_count + _REALLOC_ELEMS_STEP) * sizeof(Entry);
+        len = (_glyphs_count + _REALLOC_ELEMS_STEP) * sizeof(unsigned int);
         tmp = realloc(_glyphs, len);
         if (!tmp) return 0;
         size_max += _REALLOC_ELEMS_STEP;
@@ -63,9 +54,7 @@ _add(unsigned int  glyph,
      }
 #undef _REALLOC_ELEMS_STEP
 
-   e.codepoint = glyph;
-   strncpy(e.utf8, utf8, sizeof(e.utf8) - 1);
-   _glyphs[_glyphs_count++] = e;
+   _glyphs[_glyphs_count++] = glyph;
    return 1;
 }
 
@@ -95,7 +84,7 @@ fm_charmap_foreach(Fm_Charmap_Func func)
    if (!func) return;
    for (i = 0; i < _glyphs_count; i++)
      {
-        if (!func(_glyphs[i].codepoint, i + 1, _glyphs[i].utf8))
+        if (!func(_glyphs[i], i + 1))
           break;
      }
 }
